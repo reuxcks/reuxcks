@@ -211,47 +211,41 @@ def update_description():
         return 
     anime_name = selected_anime.text()
     description = animes.get(anime_name, {}).get('описание', '')
-    
-    # Отображаем описание в поле
     description_field.setPlainText(description)
 
 
-def add_serii():
-    # Получаем выбранное аниме
+def update_serii():
     selected_anime = anime_list.currentItem()
     if selected_anime is None:
-        return  # Если аниме не выбрано, ничего не делаем
+        return
+    anime_name = selected_anime.text()
+    series = animes.get(anime_name, {}).get('серии', [])
+    serii_list.clear()
+    for serie in series:
+        serii_list.addItem(serie)
 
-    anime_name = selected_anime.text()  # Получаем имя выбранного аниме
-    new_serii = serii_field.text().strip()  # Получаем введенную серию
-
+def add_serii():
+    selected_anime = anime_list.currentItem()
+    if selected_anime is None:
+        return
+    anime_name = selected_anime.text()
+    new_serii = serii_field.text().strip()
     if new_serii:
-        # Убедимся, что для выбранного аниме существует ключ 'серии', и это список
         if anime_name in animes:
-            # Если ключ 'серии' еще не существует или не является списком, инициализируем его как список
             if not isinstance(animes[anime_name].get('серии', None), list):
                 animes[anime_name]['серии'] = []
-
-            # Добавляем новую серию в список
             animes[anime_name]['серии'].append(new_serii)
-
-            # Добавляем серию в список на интерфейсе (serii_list)
             serii_list.addItem(new_serii)
-
-            # Очищаем поле ввода для серий
             serii_field.clear()
-
-            # Сохраняем обновленные данные в файл
             with open('data.json', 'w', encoding='utf-8') as file:
                 json.dump(animes, file, ensure_ascii=False, indent=4)
 
 add_anime.clicked.connect(add_anime2) 
 search_anime.clicked.connect(search_anime2)
 add_baner.clicked.connect(show_image2)
-add_description.clicked.connect(add_des)
 anime_list.currentItemChanged.connect(update_description)
+anime_list.currentItemChanged.connect(update_serii)
 serii.clicked.connect(add_serii)
-
 
 
 with open('data.json','r',encoding='utf-8') as file:
