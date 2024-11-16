@@ -1,0 +1,267 @@
+import os
+import json 
+from PIL import Image
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import ( 
+   QApplication, QWidget, QLabel, QListWidget, QVBoxLayout, QHBoxLayout, QPushButton, QTextEdit, QInputDialog, QLineEdit, QFileDialog
+) 
+app = QApplication([]) 
+window = QWidget() 
+window.setWindowTitle('project pyqt5') 
+# кнопки 
+anime_list = QListWidget() 
+image_anime = QLabel('tut budet chto to')
+image_baner = QLabel('tut budet baner')
+add_anime = QPushButton('dobavit anime') 
+add_description = QPushButton('dobavit opisanie') 
+search_anime = QPushButton('nayti anime') 
+add_baner = QPushButton('dobavit baner') 
+seasons = QPushButton('sezoni') 
+serii = QPushButton('serii') 
+text_field = QTextEdit() 
+description_field = QTextEdit()
+search_field = QLineEdit() 
+seasons_list = QListWidget()
+serii_list = QListWidget()
+serii_field = QLineEdit()
+seasons_field= QLineEdit()
+
+window.setStyleSheet(""" 
+    QWidget { 
+        background-color: #f0f0f0; 
+        font-family: 'Arial', sans-serif; 
+        font-size: 14px; 
+    } 
+ 
+    QPushButton { 
+        background-color: #4CAF50; 
+        color: white; 
+        border-radius: 10px; 
+        padding: 12px 20px; 
+        font-size: 16px; 
+        border: none; 
+        margin: 10px; 
+        transition: background-color 0.3s ease, transform 0.2s ease; 
+    } 
+ 
+    QPushButton:hover { 
+        background-color: #45a049; 
+        transform: scale(1.05); 
+    } 
+ 
+    QPushButton#add_description { 
+        background-color: #2196F3; 
+    } 
+    QPushButton#add_description:hover { 
+        background-color: #0b7dda; 
+    } 
+ 
+    QPushButton#search_anime { 
+        background-color: #FFC107; 
+    } 
+    QPushButton#search_anime:hover { 
+        background-color: #ff9800; 
+    } 
+ 
+    QPushButton#add_baner { 
+        background-color: #FF5722; 
+    } 
+    QPushButton#add_baner:hover { 
+        background-color: #e64a19; 
+    } 
+ 
+    QPushButton#seasons { 
+        background-color: #9C27B0; 
+    } 
+    QPushButton#seasons:hover { 
+        background-color: #7b1fa2; 
+    } 
+ 
+    QPushButton#serii { 
+        background-color: #3F51B5; 
+    } 
+    QPushButton#serii:hover { 
+        background-color: #303f9f; 
+    } 
+ 
+    QListWidget { 
+        background-color: #ffffff; 
+        border: 1px solid #ccc; 
+        border-radius: 10px; 
+        font-size: 16px; 
+        padding: 10px; 
+        width: 300px; 
+        margin-right: 20px; 
+    } 
+ 
+    QListWidget::item { 
+        padding: 10px; 
+        font-size: 16px; 
+        border-bottom: 1px solid #eee; 
+    } 
+ 
+    QVBoxLayout { 
+        margin: 20px; 
+        spacing: 15px; 
+    } 
+ 
+    QHBoxLayout { 
+        spacing: 15px; 
+    } 
+ 
+""") 
+# линии 
+main_line = QVBoxLayout() 
+left_line = QVBoxLayout() 
+left_line2 = QVBoxLayout() 
+mid_line = QHBoxLayout() 
+under_line = QHBoxLayout() 
+over_line = QHBoxLayout() 
+right_line = QVBoxLayout() 
+right_line2 = QHBoxLayout() 
+ 
+main_line.addLayout(mid_line) 
+mid_line.addLayout(left_line) 
+mid_line.addLayout(left_line2) 
+left_line.addLayout(right_line) 
+left_line2.addLayout(right_line2) 
+right_line2.addWidget(add_anime) 
+right_line2.addWidget(search_anime) 
+left_line2.addWidget(search_field) 
+left_line2.addWidget(anime_list) 
+left_line.addLayout(over_line) 
+main_line.addLayout(under_line) 
+over_line.addWidget(add_baner) 
+left_line.addWidget(image_baner)
+over_line.addWidget(add_description)
+left_line.addWidget(description_field)
+over_line.addWidget(description_field) 
+under_line.addWidget(seasons) 
+left_line2.addWidget(image_anime) 
+left_line2.addWidget(anime_list) 
+under_line.addWidget(serii) 
+left_line.addWidget(serii_list)
+left_line2.addWidget(serii_list)
+left_line2.addWidget(serii_field)
+mid_line.addWidget(seasons_list)
+left_line2.addWidget(seasons_list)
+left_line.addWidget(seasons_field)
+
+def add_anime2():
+    anime = search_field.text() 
+    if anime not in animes and anime != '':
+        animes[anime] = {'описание' : '', 'жанры' : []}
+        anime_list.addItem(anime)
+        search_field.clear()
+        with open('data.json','w',encoding='utf-8') as file:
+                json.dump(animes, file,ensure_ascii=False)
+
+
+def search_anime2():
+    search_text = search_field.text().lower() 
+    if not search_text:  
+        anime_list.clear()
+        anime_list.addItems(animes.keys())
+    else:
+        filtered_animes = [anime for anime in animes if search_text in anime.lower()]
+        anime_list.clear()
+        anime_list.addItems(filtered_animes)
+
+class ImageEditor():
+    def __init__(self):
+        self.image = None
+        self.workdir = None 
+        self.filename = None 
+
+    def load_image(self, filename):
+        self.filename = filename 
+        fullname = os.path.join(eshkere, filename)
+        self.image = Image.open(fullname)
+
+def show_image(path):
+        image = QPixmap(path)
+        image = image.scaled(image_baner.width(),image_baner.height())
+        image_baner.setPixmap(image)
+
+
+eshkere = ''
+def show_image2():
+    image_baner.clear()
+    global eshkere
+    eshkere = QFileDialog.getExistingDirectory()
+    files = os.listdir(eshkere)
+    for file in files:
+        if file.endswith('.jpg') or file.endswith('.png'):
+            image_baner.addItem(file)
+
+def add_des():
+    selected_anime = anime_list.currentItem()
+    if selected_anime is None:
+        return  
+    anime_name = selected_anime.text()  
+    description = description_field.toPlainText() 
+    animes[anime_name]['описание'] = description
+    with open('data.json', 'w', encoding='utf-8') as file:
+        json.dump(animes, file, ensure_ascii=False, indent=4)
+
+
+def update_description():
+    selected_anime = anime_list.currentItem()
+    if selected_anime is None:
+        return 
+    anime_name = selected_anime.text()
+    description = animes.get(anime_name, {}).get('описание', '')
+    
+    # Отображаем описание в поле
+    description_field.setPlainText(description)
+
+
+def add_serii():
+    # Получаем выбранное аниме
+    selected_anime = anime_list.currentItem()
+    if selected_anime is None:
+        return  # Если аниме не выбрано, ничего не делаем
+
+    anime_name = selected_anime.text()  # Получаем имя выбранного аниме
+    new_serii = serii_field.text().strip()  # Получаем введенную серию
+
+    if new_serii:
+        # Убедимся, что для выбранного аниме существует ключ 'серии', и это список
+        if anime_name in animes:
+            # Если ключ 'серии' еще не существует или не является списком, инициализируем его как список
+            if not isinstance(animes[anime_name].get('серии', None), list):
+                animes[anime_name]['серии'] = []
+
+            # Добавляем новую серию в список
+            animes[anime_name]['серии'].append(new_serii)
+
+            # Добавляем серию в список на интерфейсе (serii_list)
+            serii_list.addItem(new_serii)
+
+            # Очищаем поле ввода для серий
+            serii_field.clear()
+
+            # Сохраняем обновленные данные в файл
+            with open('data.json', 'w', encoding='utf-8') as file:
+                json.dump(animes, file, ensure_ascii=False, indent=4)
+
+add_anime.clicked.connect(add_anime2) 
+search_anime.clicked.connect(search_anime2)
+add_baner.clicked.connect(show_image2)
+add_description.clicked.connect(add_des)
+anime_list.currentItemChanged.connect(update_description)
+serii.clicked.connect(add_serii)
+
+
+
+with open('data.json','r',encoding='utf-8') as file:
+    animes = json.load(file)
+
+anime_list.addItems(animes.keys())
+
+
+ 
+window.setLayout(main_line) 
+window.resize(1200, 900) 
+window.show() 
+app.exec()
